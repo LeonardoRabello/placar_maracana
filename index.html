@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&display=swap" rel="stylesheet">
+
+    <title>Placar Maracanã</title>
+</head>
+<body>
+    <div id="container">
+        <aside id="atalhos">
+            <h2>Configurações</h2>
+
+            <label>Time 1:</label><br>
+            <input type="text" id="time-1-label" placeholder="Nome do time 1" oninput=updatePlacar()>
+            <br>
+            <label>Time 2:</label><br>
+            <input type="text" id="time-2-label" placeholder="Nome do time 2" oninput=updatePlacar()>
+            <br>
+            <label>Placar Time 1:</label><br>
+            <input type="number" id="score-1-label" min="0" value="0" oninput=updatePlacar()>
+            <br>
+            <label>Placar Time 2:</label><br>
+            <input type="number" id="score-2-label" min="0" value="0" oninput=updatePlacar()>
+        </aside>
+        <main id="main-area">
+            <div id="placar-area"> 
+                <div id="placar">
+                    <div id="placar-left"></div>
+                    <div id="placar-center"></div>
+                    <div id="placar-right">
+                        <div id="nomes">
+                            <p id="time-1"></p>
+                            <p id="time-2"></p>
+                        </div>
+                        <div id="score">
+                            <p id="score-1"></p>
+                            <p id="score-2"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
