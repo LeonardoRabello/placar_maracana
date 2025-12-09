@@ -1,0 +1,71 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+#container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Barra lateral */
+#config {
+    width: 40vh;
+    text-align: center;
+    background: darkgray;
+}
+
+/* Área central */
+#main-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: gray;
+}
+
+/* Área que contém o placar */
+#placar-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vh;
+    height: 66vh;
+    background: black;
+}
+
+/* --- PLACAR --- */
+#placar {
+    width: 95vh;
+    height: 16vh;
+    display: flex;
+    border: 4px solid white;     /* borda branca igual à imagem */
+    box-sizing: border-box;
+}
+
+
+/* Ajuste de proporção das 3 áreas */
+#placar-left {
+    width: 100vh;          /* área de animações */
+    background: #000;
+}
+
+#placar-center {
+    width: 42vh;          /* tempo */
+    background: #111;
+}
+
+#placar-right {
+    font-family: "Bitcount Prop Single", monospace;
+    font-weight: normal;
+    font-style: normal;
+    letter-spacing: 0;
+    font-size: 30px;
+    width: 100vh;          /* times + placar */
+    background: #000;
+    color: white;
+
+    display: flex;         /* ativa o flexbox */
+    justify-content: space-between; /* separa horizontalmente */
+    align-items: center;   /* centraliza verticalmente, se quiser */
+}
