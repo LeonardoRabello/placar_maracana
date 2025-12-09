@@ -9,8 +9,9 @@ body {
 }
 
 /* Barra lateral */
-#atalhos {
+#config {
     width: 40vh;
+    text-align: center;
     background: darkgray;
 }
 
@@ -68,4 +69,3 @@ body {
     justify-content: space-between; /* separa horizontalmente */
     align-items: center;   /* centraliza verticalmente, se quiser */
 }
-

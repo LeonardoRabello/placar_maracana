@@ -12,20 +12,23 @@
 </head>
 <body>
     <div id="container">
-        <aside id="atalhos">
+        <aside id="config">
             <h2>Configurações</h2>
 
             <label>Time 1:</label><br>
-            <input type="text" id="time-1-label" placeholder="Nome do time 1" oninput=updatePlacar()>
+            <input type="text" id="time-1-label" placeholder="Nome do time 1">
             <br>
             <label>Time 2:</label><br>
-            <input type="text" id="time-2-label" placeholder="Nome do time 2" oninput=updatePlacar()>
+            <input type="text" id="time-2-label" placeholder="Nome do time 2">
             <br>
             <label>Placar Time 1:</label><br>
-            <input type="number" id="score-1-label" min="0" value="0" oninput=updatePlacar()>
+            <input type="number" id="score-1-label" min="0" value="0">
             <br>
             <label>Placar Time 2:</label><br>
-            <input type="number" id="score-2-label" min="0" value="0" oninput=updatePlacar()>
+            <input type="number" id="score-2-label" min="0" value="0">
+            <br>
+            <br>
+            <button onclick="updatePlacar()">Atualizar Placar</button>
         </aside>
         <main id="main-area">
             <div id="placar-area"> 
