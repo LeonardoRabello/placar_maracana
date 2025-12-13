@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LED Array Editor - 256x32</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="controls">
+        <button onclick="clearAll()">Clear All</button>
+        <button onclick="fillAll()">Fill All</button>
+        <button class="primary" onclick="savePattern()">Save</button>
+        <button class="primary" onclick="loadPattern()">Load</button>
+        
+        <div class="separator"></div>
+        
+        <label>Zoom:</label>
+        <button class="zoom" onclick="zoomOut()">-</button>
+        <button class="zoom" onclick="zoomIn()">+</button>
+        <button onclick="zoomReset()">Reset</button>
+        
+        <div id="status">LEDs on: 0 / 8192 | Zoom: 100%</div>
+    </div>
+
+    <div id="canvasContainer">
+        <canvas id="ledCanvas"></canvas>
+    </div>
+
+    <input type="file" id="fileInput" style="display: none;" accept=".json">
+
+    <script src="main.js"></script>
+</body>
+</html>
