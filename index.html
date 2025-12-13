@@ -33,23 +33,28 @@
         <main id="main-area">
             <div id="placar-area"> 
                 <div id="placar">
-                    <div id="placar-left"></div>
-                    <div id="placar-center"></div>
+                    <div id="placar-left">
+                        <canvas id="display-left" width="120" height="32"></canvas>
+                        <script src="script.js"></script>
+                    </div>
+                    <div id="placar-center">
+                        <canvas id="display-center" width="32" height="32"></canvas>
+                    </div>
                     <div id="placar-right">
-                        <div id="nomes">
-                            <p id="time-1"></p>
-                            <p id="time-2"></p>
-                        </div>
-                        <div id="score">
-                            <p id="score-1"></p>
-                            <p id="score-2"></p>
-                        </div>
+                        <canvas id="display-right" width="120" height="32"></canvas>
                     </div>
                 </div>
-
             </div>
+            <br><p class="title-canvas">PLACAR ESQUERDA</p>
+            <div class="canvas-container"  id="canvas-left-container">
+                <canvas class="canvas" id="canvas-left" width="120" height="32"></canvas>
+            </div>
+            <br><p class="title-canvas">PLACAR DIREITA</p>
+            <div class="canvas-container" id="canvas-right-container">
+                <canvas class="canvas" id="canvas-right" width="120" height="32"></canvas>
+            </div>
+            
         </main>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>

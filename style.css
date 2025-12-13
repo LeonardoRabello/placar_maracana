@@ -1,71 +1,102 @@
+/* RESET BÁSICO */
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: sans-serif;
+    height: 100vh;
+    overflow: hidden; /* evita scroll duplo */
 }
 
+/* CONTAINER PRINCIPAL */
 #container {
     display: flex;
     height: 100vh;
 }
 
-/* Barra lateral */
+/* SIDEBAR */
 #config {
-    width: 40vh;
-    text-align: center;
+    width: 260px;                 /* sidebar menor */
     background: darkgray;
+    padding: 20px;
+    text-align: center;
+    flex-shrink: 0;               /* nunca comprime */
 }
 
-/* Área central */
+/* ÁREA CENTRAL COM SCROLL */
 #main-area {
     flex: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    gap: 40px;
     background: gray;
+    padding: 40px 0;
+    overflow-y: auto;
 }
 
-/* Área que contém o placar */
+/* ===== PLACAR PRINCIPAL (MENOS LARGO) ===== */
 #placar-area {
+    width: 70%;
+    max-width: 850px;
+    background: black;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vh;
-    height: 66vh;
-    background: black;
+    flex-shrink: 0;
 }
 
-/* --- PLACAR --- */
 #placar {
-    width: 95vh;
-    height: 16vh;
+    width: 100%;
+    aspect-ratio: 3.75 / 1;   /* 120x32 */
+    border: 4px solid white;
+    background: black;
     display: flex;
-    border: 4px solid white;     /* borda branca igual à imagem */
-    box-sizing: border-box;
 }
 
+/* DIVISÕES INTERNAS DO PLACAR */
+#placar-left,
+#placar-center,
+#placar-right {
+    background: black;
+    flex-shrink: 0;
+}
 
-/* Ajuste de proporção das 3 áreas */
 #placar-left {
-    width: 100vh;          /* área de animações */
-    background: #000;
+    flex: 3;
 }
 
 #placar-center {
-    width: 42vh;          /* tempo */
+    flex: 1;
     background: #111;
 }
 
 #placar-right {
-    font-family: "Bitcount Prop Single", monospace;
-    font-weight: normal;
-    font-style: normal;
-    letter-spacing: 0;
-    font-size: 30px;
-    width: 100vh;          /* times + placar */
-    background: #000;
-    color: white;
+    flex: 3;
+}
 
-    display: flex;         /* ativa o flexbox */
-    justify-content: space-between; /* separa horizontalmente */
-    align-items: center;   /* centraliza verticalmente, se quiser */
+/* ===== TÍTULOS ===== */
+.title-canvas {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* ===== PLACARES DE BAIXO ===== */
+.canvas-container {
+    width: 85%;
+    max-width: 1000px;
+    aspect-ratio: 3.75 / 1;
+    background: black;
+    flex-shrink: 0;
+}
+
+/* ===== CANVAS ===== */
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: black;
+    image-rendering: pixelated;
 }
