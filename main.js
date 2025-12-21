@@ -208,43 +208,78 @@ async function updateDisplay() {
     }
 }
 
-// Função para exportar display como JSON
-function exportDisplayAsJSON() {
-    const bitlines = [];
-    
-    // Percorrer cada linha do display
-    for (let y = 0; y < DISPLAY_HEIGHT; y++) {
-        let line = '';
-        // Percorrer cada coluna da linha
-        for (let x = 0; x < DISPLAY_WIDTH; x++) {
-            const pixelIndex = y * DISPLAY_WIDTH + x;
-            // Verificar se o pixel está aceso (tem classe 'on')
-            const isOn = pixels[pixelIndex].classList.contains('on');
-            line += isOn ? '1' : '0';
+// Função para exportar display como BIN
+function exportAs128x64_XBM_From256x32() {
+  // Entrada (simulador)
+  const IN_W = 256;
+  const IN_H = 32;
+
+  // Saída (hardware u8g2 drawXBMP)
+  const OUT_W = 128;
+  const OUT_H = 64;
+
+  if (DISPLAY_WIDTH !== IN_W || DISPLAY_HEIGHT !== IN_H) {
+    console.warn(
+      `Esperado display ${IN_W}x${IN_H} para este export. Atual: ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}`
+    );
+  }
+
+  const bytesPerRow = OUT_W / 8; // 16
+  const totalBytes = OUT_H * bytesPerRow; // 64*16 = 1024
+  const buffer = new Uint8Array(totalBytes);
+
+  function inPixel(x, y) {
+    // protege limites
+    if (x < 0 || x >= DISPLAY_WIDTH || y < 0 || y >= DISPLAY_HEIGHT) return false;
+    const idx = y * DISPLAY_WIDTH + x;
+    return pixels[idx].classList.contains('on');
+  }
+
+  // escreve em formato XBM: por linha, 8px -> 1 byte, LSB = pixel mais à esquerda
+  let i = 0;
+  for (let yOut = 0; yOut < OUT_H; yOut++) {
+    for (let byteIndex = 0; byteIndex < bytesPerRow; byteIndex++) {
+      let byte = 0;
+
+      for (let bit = 0; bit < 8; bit++) {
+        const xOut = byteIndex * 8 + bit;
+
+        // mapear saída -> entrada (dobrar direita pra baixo)
+        let xIn, yIn;
+
+        if (yOut < 32) {
+          // topo: pega metade esquerda
+          xIn = xOut;          // 0..127
+          yIn = yOut;          // 0..31
+        } else {
+          // baixo: pega metade direita
+          xIn = xOut + 128;    // 128..255
+          yIn = yOut - 32;     // 0..31
         }
-        bitlines.push(line);
+
+        const isOn = inPixel(xIn, yIn);
+        if (isOn) {
+          byte |= (1 << bit); // XBM LSB-first
+        }
+      }
+
+      buffer[i++] = byte;
     }
-    
-    // Criar objeto JSON
-    const jsonData = {
-        bitlines: bitlines
-    };
-    
-    // Converter para string JSON formatada
-    const jsonString = JSON.stringify(jsonData, null, 2);
-    
-    // Criar blob e fazer download
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `display.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    console.log('Display exportado com sucesso!');
+  }
+
+  const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'bitmap_128x64.bin';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+
+  console.log(`Exportado bitmap_128x64.bin (${totalBytes} bytes)`);
 }
 
 // Event listeners para inputs de texto
@@ -296,7 +331,7 @@ document.getElementById('awayscore').addEventListener('input', function(e) {
 });
 
 // Event listener para botão de exportar
-document.getElementById('export-btn').addEventListener('click', exportDisplayAsJSON);
+document.getElementById('export-btn').addEventListener('click', exportAs128x64_XBM_From256x32);
 
 // Inicializar
 (async function init() {
