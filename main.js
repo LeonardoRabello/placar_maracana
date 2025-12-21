@@ -26,7 +26,7 @@ for (let i = 0; i < 32 * 256; i++) {
 // Função para carregar logo do Maracanã
 async function loadMaracana() {
     try {
-        const response = await fetch('./assets/bitfiles/maracana.json');
+        const response = await fetch('/assets/bitfiles/maracana.json');
         if (!response.ok) {
             console.warn('Maracanã logo não encontrado');
             return null;
@@ -54,7 +54,7 @@ async function loadChar(char) {
             filename = 'dois-pontos';
         }
 
-        const response = await fetch(`./assets/bitfiles/${filename}.json`);
+        const response = await fetch(`/assets/bitfiles/${filename}.json`);
         if (!response.ok) {
             console.warn(`Caractere ${char} não encontrado`);
             return null;
