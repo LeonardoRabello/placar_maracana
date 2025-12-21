@@ -1,60 +1,52 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placar Binário</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&display=swap" rel="stylesheet">
-
-    <title>Placar Maracanã</title>
 </head>
 <body>
-    <div id="container">
-        <aside id="config">
-            <h2>Configurações</h2>
+     <div class="controls">
+        <h2>Controles do Placar</h2>
 
-            <label>Time 1:</label><br>
-            <input type="text" id="time-1-label" placeholder="Nome do time 1">
-            <br>
-            <label>Time 2:</label><br>
-            <input type="text" id="time-2-label" placeholder="Nome do time 2">
-            <br>
-            <label>Placar Time 1:</label><br>
-            <input type="number" id="score-1-label" min="0" value="0">
-            <br>
-            <label>Placar Time 2:</label><br>
-            <input type="number" id="score-2-label" min="0" value="0">
-            <br>
-            <br>
-            <button onclick="updatePlacar()">Atualizar Placar</button>
-        </aside>
-        <main id="main-area">
-            <div id="placar-area"> 
-                <div id="placar">
-                    <div id="placar-left">
-                        <canvas id="display-left" width="120" height="32"></canvas>
-                    </div>
-                    <div id="placar-center">
-                        <canvas id="display-center" width="32" height="32"></canvas>
-                    </div>
-                    <div id="placar-right">
-                        <canvas id="display-right" width="120" height="32"></canvas>
-                    </div>
-                </div>
-            </div>
-            <br><p class="title-canvas">PLACAR ESQUERDA</p>
-            <div class="canvas-container"  id="canvas-left-container">
-                <canvas class="canvas" id="canvas-left" width="120" height="32"></canvas>
-            </div>
-            <br><p class="title-canvas">PLACAR DIREITA</p>
-            <div class="canvas-container" id="canvas-right-container">
-                <canvas class="canvas" id="canvas-right" width="120" height="32"></canvas>
-            </div>
-            
-        </main>
+        <div class="input-group">
+            <label for="hometeam">Time Mandante</label>
+            <input type="text" id="hometeam" maxlength="12" placeholder="MANDANTE">
+            <div class="char-count"><span id="home-count">0</span>/10</div>
+            <div class="error" id="home-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="homescore">Placar Mandante</label>
+            <input type="number" id="homescore" min="0" max="9" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="awayteam">Time Visitante</label>
+            <input type="text" id="awayteam" maxlength="12" placeholder="VISITANTE">
+            <div class="char-count"><span id="away-count">0</span>/10</div>
+            <div class="error" id="away-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="awayscore">Placar Visitante</label>
+            <input type="number" id="awayscore" min="0" max="9" value="0">
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <div class="display-container">
+        <h2>Display 256x32</h2>
+        <div class="display">
+            <div class="display-grid" id="display"></div>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <button id="export-btn" style="width: 100%; padding: 10px; background: #4CAF50; border: none; border-radius: 4px; color: white; font-size: 16px; cursor: pointer;">
+            Exportar JSON
+        </button>
+    </div>
 </body>
+<script src="main.js"></script>
 </html>
