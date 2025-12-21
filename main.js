@@ -26,7 +26,7 @@ for (let i = 0; i < 32 * 256; i++) {
 // Função para carregar logo do Maracanã
 async function loadMaracana() {
     try {
-        const response = await fetch('assets/bitfiles/maracana.json');
+        const response = await fetch('assets/bitfiles/flamengo.json');
         if (!response.ok) {
             console.warn('Maracanã logo não encontrado');
             return null;
