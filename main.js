@@ -26,7 +26,7 @@ for (let i = 0; i < 32 * 256; i++) {
 // Função para carregar logo do Maracanã
 async function loadMaracana() {
     try {
-        const response = await fetch('assets/bitfiles/flamengo.json');
+        const response = await fetch('assets/bitfiles/maracana.json');
         if (!response.ok) {
             console.warn('Maracanã logo não encontrado');
             return null;
@@ -37,6 +37,22 @@ async function loadMaracana() {
         return maracanaData;
     } catch (error) {
         console.error('Erro ao carregar Maracanã:', error);
+        return null;
+    }
+}
+
+async function loadImage(image_name) {
+    try {
+        const response = await fetch(`./assets/bitfiles/${image_name}.json`);
+        if (!response.ok) {
+            console.warn('Imagem não encontrada');
+            return null;
+        }
+        const data = await response.json();
+        imageData = data.bitlines;
+        return imageData;
+    } catch (error) {
+        console.error('Erro ao carregar imagem:', error);
         return null;
     }
 }
@@ -100,9 +116,9 @@ function clearArea(startX, startY, width, height) {
 function drawImage(bitlines, startX, startY) {
     if (!bitlines) return;
 
-    for (let y = 0; y < bitlines.length && y < 20; y++) {
+    for (let y = 0; y < bitlines.length; y++) {
         const line = bitlines[y];
-        for (let x = 0; x < line.length && x < 35; x++) {
+        for (let x = 0; x < line.length; x++) {
             if (line[x] === '1') {
                 const pixelIndex = (startY + y) * 256 + (startX + x);
                 if (pixelIndex < pixels.length) {
@@ -172,13 +188,15 @@ async function updateDisplay() {
 
     // Desenhar relógio
     const currentTime = getCurrentTime();
-    await renderText(currentTime, CLOCK_X, CLOCK_Y);
+    // await renderText(currentTime, CLOCK_X, CLOCK_Y);
     lastClockTime = currentTime;
 
     // Desenhar logo do Maracanã
-    if (maracanaData) {
-        drawImage(maracanaData, 100, 6);
-    }
+    // if (maracanaData) {
+    //     drawImage(maracanaData, 70, 6);
+    // }
+    const govrj = await loadImage('suderj')
+    drawImage(govrj, 13, 0)
 
     const homeTeam = document.getElementById('hometeam').value;
     const awayTeam = document.getElementById('awayteam').value;
@@ -187,7 +205,11 @@ async function updateDisplay() {
 
     // Renderizar time mandante na linha 5
     if (homeTeam) {
-        await renderText(homeTeam, 150, 5);
+        await renderText(homeTeam, 175, 5);
+        const homeLogo = await loadImage(homeTeam)
+        if (homeLogo) {
+            //drawImage(homeLogo, 120, 5)
+        }
     }
 
     // Renderizar placar mandante (fixo a 10 pixels do final do display)
@@ -198,7 +220,11 @@ async function updateDisplay() {
 
     // Renderizar time visitante na linha 20
     if (awayTeam) {
-        await renderText(awayTeam, 150, 20);
+        await renderText(awayTeam, 175, 20);
+        const awayLogo = await loadImage(awayTeam)
+        if (awayLogo) {
+            //drawImage(awayLogo, 120, 20 )
+        }
     }
 
     // Renderizar placar visitante (fixo a 10 pixels do final do display)
@@ -208,34 +234,24 @@ async function updateDisplay() {
     }
 }
 
-// Função para exportar display como BIN
-function exportAs128x64_XBM_From256x32() {
-  // Entrada (simulador)
+//enviarbinparaobackend
+async function gerarEBinEEnviarParaBackend() {
   const IN_W = 256;
   const IN_H = 32;
 
-  // Saída (hardware u8g2 drawXBMP)
   const OUT_W = 128;
   const OUT_H = 64;
 
-  if (DISPLAY_WIDTH !== IN_W || DISPLAY_HEIGHT !== IN_H) {
-    console.warn(
-      `Esperado display ${IN_W}x${IN_H} para este export. Atual: ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}`
-    );
-  }
-
   const bytesPerRow = OUT_W / 8; // 16
-  const totalBytes = OUT_H * bytesPerRow; // 64*16 = 1024
+  const totalBytes = OUT_H * bytesPerRow; // 1024 bytes
   const buffer = new Uint8Array(totalBytes);
 
   function inPixel(x, y) {
-    // protege limites
     if (x < 0 || x >= DISPLAY_WIDTH || y < 0 || y >= DISPLAY_HEIGHT) return false;
     const idx = y * DISPLAY_WIDTH + x;
     return pixels[idx].classList.contains('on');
   }
 
-  // escreve em formato XBM: por linha, 8px -> 1 byte, LSB = pixel mais à esquerda
   let i = 0;
   for (let yOut = 0; yOut < OUT_H; yOut++) {
     for (let byteIndex = 0; byteIndex < bytesPerRow; byteIndex++) {
@@ -244,22 +260,17 @@ function exportAs128x64_XBM_From256x32() {
       for (let bit = 0; bit < 8; bit++) {
         const xOut = byteIndex * 8 + bit;
 
-        // mapear saída -> entrada (dobrar direita pra baixo)
         let xIn, yIn;
-
         if (yOut < 32) {
-          // topo: pega metade esquerda
-          xIn = xOut;          // 0..127
-          yIn = yOut;          // 0..31
+          xIn = xOut;
+          yIn = yOut;
         } else {
-          // baixo: pega metade direita
-          xIn = xOut + 128;    // 128..255
-          yIn = yOut - 32;     // 0..31
+          xIn = xOut + 128;
+          yIn = yOut - 32;
         }
 
-        const isOn = inPixel(xIn, yIn);
-        if (isOn) {
-          byte |= (1 << bit); // XBM LSB-first
+        if (inPixel(xIn, yIn)) {
+          byte |= (1 << bit); // LSB-first (XBM)
         }
       }
 
@@ -267,19 +278,30 @@ function exportAs128x64_XBM_From256x32() {
     }
   }
 
-  const blob = new Blob([buffer], { type: 'application/octet-stream' });
-  const url = URL.createObjectURL(blob);
+  // ===== ENVIO PARA BACKEND =====
+  const blob = new Blob([buffer], {
+    type: 'application/octet-stream'
+  });
 
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'bitmap_128x64.bin';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const formData = new FormData();
+  formData.append('file', blob, 'bitmap_128x64.bin');
 
-  URL.revokeObjectURL(url);
+  const response = await fetch(
+    'https://placar-maracana-backend.onrender.com/upload',
+    {
+      method: 'POST',
+      body: formData
+    }
+  );
 
-  console.log(`Exportado bitmap_128x64.bin (${totalBytes} bytes)`);
+  if (!response.ok) {
+    throw new Error('Erro ao enviar o .bin para o backend');
+  }
+
+  const result = await response.json();
+  console.log('BIN enviado com sucesso:', result);
+
+  return result;
 }
 
 // Event listeners para inputs de texto
@@ -334,11 +356,11 @@ document.getElementById('awayscore').addEventListener('input', function(e) {
 document.getElementById('export-btn').addEventListener('click', exportAs128x64_XBM_From256x32);
 
 // Inicializar
-(async function init() {
-    await loadMaracana();
-    clearDisplay();
-    updateDisplay();
+// (async function init() {
+//     await loadMaracana();
+//     clearDisplay();
+//     updateDisplay();
 
-    // Atualizar display a cada segundo para o relógio
-    setInterval(updateClock, 1000);
-})();
+//     // Atualizar display a cada segundo para o relógio
+//     setInterval(updateClock, 1000);
+// })();
