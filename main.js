@@ -354,7 +354,7 @@ document.getElementById('awayscore').addEventListener('input', function(e) {
 });
 
 // Event listener para botão de exportar
-document.getElementById('export-btn').addEventListener('click', exportAs128x64_XBM_From256x32);
+document.getElementById('export-btn').addEventListener('click', gerarEBinEEnviarParaBackend);
 
 // Inicializar
 // (async function init() {
