@@ -284,7 +284,8 @@ async function gerarEBinEEnviarParaBackend() {
   });
 
   const formData = new FormData();
-  formData.append('file', blob, 'bitmap_128x64.bin');
+  formData.append('file', blob, 'display.bin');
+  console.log('ok')
 
   const response = await fetch(
     'https://placar-maracana-backend.onrender.com/upload',
