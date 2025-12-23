@@ -32,7 +32,7 @@ async function loadMaracana() {
             return null;
         }
         const data = await response.json();
-        console.log(data)
+
         maracanaData = data.bitlines;
         return maracanaData;
     } catch (error) {
@@ -188,15 +188,15 @@ async function updateDisplay() {
 
     // Desenhar relógio
     const currentTime = getCurrentTime();
-    // await renderText(currentTime, CLOCK_X, CLOCK_Y);
+    await renderText(currentTime, CLOCK_X, CLOCK_Y);
     lastClockTime = currentTime;
 
     // Desenhar logo do Maracanã
-    // if (maracanaData) {
-    //     drawImage(maracanaData, 70, 6);
-    // }
-    const govrj = await loadImage('suderj')
-    drawImage(govrj, 13, 0)
+    if (maracanaData) {
+        drawImage(maracanaData, 70, 6);
+    }
+    // const govrj = await loadImage('suderj')
+    // drawImage(govrj, 13, 0)
 
     const homeTeam = document.getElementById('hometeam').value;
     const awayTeam = document.getElementById('awayteam').value;
@@ -234,7 +234,7 @@ async function updateDisplay() {
     }
 }
 
-//enviarbinparaobackend
+// enviarbinparaobackend
 async function gerarEBinEEnviarParaBackend() {
   const IN_W = 256;
   const IN_H = 32;
@@ -285,7 +285,6 @@ async function gerarEBinEEnviarParaBackend() {
 
   const formData = new FormData();
   formData.append('file', blob, 'display.bin');
-  console.log('ok')
 
   const response = await fetch(
     'https://placar-maracana-backend.onrender.com/upload',
@@ -300,8 +299,6 @@ async function gerarEBinEEnviarParaBackend() {
   }
 
   const result = await response.json();
-  console.log('BIN enviado com sucesso:', result);
-
   return result;
 }
 
@@ -357,11 +354,12 @@ document.getElementById('awayscore').addEventListener('input', function(e) {
 document.getElementById('export-btn').addEventListener('click', gerarEBinEEnviarParaBackend);
 
 // Inicializar
-// (async function init() {
-//     await loadMaracana();
-//     clearDisplay();
-//     updateDisplay();
+(async function init() {
+    await loadMaracana();
+    clearDisplay();
+    updateDisplay();
 
-//     // Atualizar display a cada segundo para o relógio
-//     setInterval(updateClock, 1000);
-// })();
+    // Atualizar display a cada segundo para o relógio
+    setInterval(updateClock, 1000);
+    setInterval(gerarEBinEEnviarParaBackend, 1000);
+})();
