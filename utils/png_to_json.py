@@ -3,11 +3,11 @@ import cv2
 import numpy as np
 import json
 
-folder_path = './assets/images'
+folder_path = './assets/images/times_processed'
 char_paths = os.listdir(folder_path)
 
 for char_path in char_paths:
-    char = 1 - (np.array(cv2.imread(folder_path + '/' + char_path, cv2.IMREAD_GRAYSCALE))//255)
+    char = (np.array(cv2.imread(folder_path + '/' + char_path, cv2.IMREAD_GRAYSCALE))//255)
     bitlines = [''.join(map(str, row)) for row in char]
 
     json_data = {
