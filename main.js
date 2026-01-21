@@ -34,11 +34,10 @@ submitBtn.addEventListener('click', async () => {
     try {
         submitBtn.disabled = true;
         showStatus('Enviando configuração...', 'loading');
-
         const config = {
-            homeTeam: hometeamInput.value || 'MANDANTE',
+            homeTeam: hometeamInput.value.toLowerCase() || 'MANDANTE',
             homeScore: parseInt(homescoreInput.value) || 0,
-            awayTeam: awayteamInput.value || 'VISITANTE',
+            awayTeam: awayteamInput.value.toLowerCase() || 'VISITANTE',
             awayScore: parseInt(awayscoreInput.value) || 0,
             image: imageSelect.value
         };
